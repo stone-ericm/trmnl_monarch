@@ -1,96 +1,94 @@
 <!-- Monarch Money TRMNL Plugin - Shared Components -->
 <style>
-  .tx-amount { font-weight: bold; }
-  .tx-amount--income { }
-  .tx-amount--expense { }
-  .tx-pending { 
-    font-size: 0.7em; 
-    padding: 1px 4px; 
-    border: 1px solid black;
-    border-radius: 2px;
+  .tx-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #ccc;
   }
-  .tx-icon { font-size: 1.2em; margin-right: 4px; }
-  .tx-meta { opacity: 0.8; }
-  .overflow-hidden { overflow: hidden; }
-  .text-right { text-align: right; }
-  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .tx-row:last-child {
+    border-bottom: none;
+  }
+  .tx-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+  .tx-merchant {
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tx-meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+  }
+  .tx-amount {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+    white-space: nowrap;
+    padding-left: 12px;
+  }
+  .tx-pending {
+    font-size: 10px;
+    padding: 2px 6px;
+    border: 1px solid #888;
+    border-radius: 3px;
+    margin-left: 6px;
+  }
+  .tx-icon {
+    margin-right: 6px;
+  }
 </style>
 
 {% template transaction_row %}
-  <div class="item {{ cssClasses }}">
-    <div class="flex flex--row flex--top">
-      <div class="content w--auto">
-        <div class="flex-between">
-          <div class="title title--small" data-pixel-perfect="true">
-            {% if show_category == true or show_category == 'true' %}
-              <span class="tx-icon">{{ category_icon }}</span>
-            {% endif %}
-            {{ merchant | truncate: 25 }}
-            {% if pending and show_pending == true or show_pending == 'true' %}
-              <span class="tx-pending">PENDING</span>
-            {% endif %}
-          </div>
-          <div class="tx-amount {% if is_income %}tx-amount--income{% else %}tx-amount--expense{% endif %}">
-            {{ amount_formatted }}
-          </div>
-        </div>
-        <div class="description tx-meta">
-          {% if show_category == true or show_category == 'true' %}
-            <span>{{ category }}</span>
+  <div class="tx-row">
+    <div class="tx-left">
+      <div class="tx-merchant">
+        {% if show_category == true or show_category == 'true' %}
+          <span class="tx-icon">{{ category_icon }}</span>
+        {% endif %}
+        {{ merchant | truncate: 20 }}
+        {% if pending == true %}
+          {% if show_pending == true or show_pending == 'true' %}
+            <span class="tx-pending">PENDING</span>
           {% endif %}
-          {% if show_account == true or show_account == 'true' %}
-            {% if show_category == true or show_category == 'true' %} · {% endif %}
-            <span>{{ account | truncate: 20 }}</span>
-          {% endif %}
-          {% if show_date == true or show_date == 'true' %}
-            {% if show_category == true or show_category == 'true' or show_account == true or show_account == 'true' %} · {% endif %}
-            <span>{{ date_formatted }}</span>
-          {% endif %}
-        </div>
+        {% endif %}
       </div>
+      <div class="tx-meta">
+        {% if show_category == true or show_category == 'true' %}
+          {{ category }}
+        {% endif %}
+        {% if show_account == true or show_account == 'true' %}
+          {% if show_category == true or show_category == 'true' %} · {% endif %}
+          {{ account | truncate: 15 }}
+        {% endif %}
+        {% if show_date == true or show_date == 'true' %}
+          {% if show_category == true or show_category == 'true' or show_account == true or show_account == 'true' %} · {% endif %}
+          {{ date_formatted }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="tx-amount">
+      {{ amount_formatted }}
     </div>
   </div>
 {% endtemplate %}
 
 {% template transaction_compact %}
-  <div class="item {{ cssClasses }}">
-    <div class="flex flex--row flex--top">
-      <div class="content w--auto">
-        <div class="flex-between">
-          <div class="title title--small" data-pixel-perfect="true">
-            <span class="tx-icon">{{ category_icon }}</span>
-            {{ merchant | truncate: 18 }}
-          </div>
-          <div class="tx-amount {% if is_income %}tx-amount--income{% else %}tx-amount--expense{% endif %}">
-            {{ amount_formatted }}
-          </div>
-        </div>
-      </div>
+  <div class="tx-row">
+    <div class="tx-merchant" style="flex: 1;">
+      <span class="tx-icon">{{ category_icon }}</span>
+      {{ merchant | truncate: 16 }}
     </div>
-  </div>
-{% endtemplate %}
-
-{% template transaction_card %}
-  <div class="media-item--cover w--full overflow-hidden {{ cssClasses }}">
-    <div class="p--4" style="border: 1px solid black;">
-      <div class="flex-between mb--2">
-        <div class="title title--small">
-          <span class="tx-icon">{{ category_icon }}</span>
-          {{ merchant | truncate: 20 }}
-        </div>
-        <div class="tx-amount {% if is_income %}tx-amount--income{% else %}tx-amount--expense{% endif %}">
-          {{ amount_formatted }}
-        </div>
-      </div>
-      <div class="description tx-meta">
-        {{ category }}
-        {% if show_date == true or show_date == 'true' %}
-          · {{ date_formatted }}
-        {% endif %}
-      </div>
-      {% if pending and show_pending == true or show_pending == 'true' %}
-        <span class="tx-pending">PENDING</span>
-      {% endif %}
+    <div class="tx-amount">
+      {{ amount_formatted }}
     </div>
   </div>
 {% endtemplate %}

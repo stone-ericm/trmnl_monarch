@@ -4,26 +4,15 @@
     url: trmnl.plugin_settings.custom_fields_values.api_url
   %}
 {% else %}
-  <div class="layout">
-    <div class="columns">
-      <div class="column">
-        <div class="list" 
-          data-list-limit="true" 
-          data-list-max-height="180" 
-          data-list-hidden-count="false"
-          data-list-max-columns="1">        
-          {% for item in items limit:4 %}
-            {% render "transaction_compact", 
-              cssClasses: "",
-              merchant: item.merchant,
-              amount_formatted: item.amount_formatted,
-              is_income: item.is_income,
-              is_expense: item.is_expense,
-              category_icon: item.category_icon
-            %}
-          {% endfor %}
-        </div>
-      </div>
+  <div class="layout" style="padding: 8px;">
+    <div class="tx-list">
+      {% for item in items limit:4 %}
+        {% render "transaction_compact", 
+          merchant: item.merchant,
+          amount_formatted: item.amount_formatted,
+          category_icon: item.category_icon
+        %}
+      {% endfor %}
     </div>
   </div>
 {% endif %}

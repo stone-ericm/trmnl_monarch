@@ -9,34 +9,25 @@
   {% assign show_date = trmnl.plugin_settings.custom_fields_values.show_date %}
   {% assign show_pending = trmnl.plugin_settings.custom_fields_values.show_pending %}
 
-  <div class="layout">
-    <div class="columns">
-      <div class="column">
-        <div class="list" 
-          data-list-limit="true" 
-          data-list-max-height="420" 
-          data-list-hidden-count="false"
-          data-list-max-columns="1">        
-          {% for item in items limit:10 %}
-            {% render "transaction_row", 
-              cssClasses: "pr--4",
-              merchant: item.merchant,
-              amount_formatted: item.amount_formatted,
-              is_income: item.is_income,
-              is_expense: item.is_expense,
-              pending: item.pending,
-              category: item.category,
-              category_icon: item.category_icon,
-              account: item.account,
-              date_formatted: item.date_formatted,
-              show_account: show_account,
-              show_category: show_category,
-              show_date: show_date,
-              show_pending: show_pending
-            %}
-          {% endfor %}
-        </div>
-      </div>
+  <div class="layout" style="padding: 16px;">
+    <div class="tx-list">
+      {% for item in items limit:10 %}
+        {% render "transaction_row", 
+          merchant: item.merchant,
+          amount_formatted: item.amount_formatted,
+          is_income: item.is_income,
+          is_expense: item.is_expense,
+          pending: item.pending,
+          category: item.category,
+          category_icon: item.category_icon,
+          account: item.account,
+          date_formatted: item.date_formatted,
+          show_account: show_account,
+          show_category: show_category,
+          show_date: show_date,
+          show_pending: show_pending
+        %}
+      {% endfor %}
     </div>
   </div>
 {% endif %}

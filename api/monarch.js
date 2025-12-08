@@ -4,7 +4,12 @@
  * This serverless function authenticates with Monarch Money and fetches
  * recent transactions from all accounts.
  * 
- * Environment Variables Required:
+ * Environment Variables Required (choose one method):
+ * 
+ * Method 1 - Token Auth (for Google OAuth users):
+ * - MONARCH_TOKEN: Your Monarch session token (from browser)
+ * 
+ * Method 2 - Password Auth:
  * - MONARCH_EMAIL: Your Monarch Money email
  * - MONARCH_PASSWORD: Your Monarch Money password
  * - MONARCH_MFA_SECRET: (Optional) TOTP secret for MFA
@@ -309,14 +314,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ status: 'error', message: 'Method not allowed' });
   }
 
+  // Check for token-based auth first (for Google OAuth users)
+  const directToken = process.env.MONARCH_TOKEN;
   const email = process.env.MONARCH_EMAIL;
   const password = process.env.MONARCH_PASSWORD;
   const mfaSecret = process.env.MONARCH_MFA_SECRET;
   
-  if (!email || !password) {
+  if (!directToken && (!email || !password)) {
     return res.status(500).json({
       status: 'error',
-      message: 'Monarch credentials not configured. Set MONARCH_EMAIL and MONARCH_PASSWORD environment variables.',
+      message: 'Monarch credentials not configured. Set MONARCH_TOKEN (for Google OAuth) or MONARCH_EMAIL and MONARCH_PASSWORD environment variables.',
     });
   }
 
@@ -328,8 +335,13 @@ export default async function handler(req, res) {
     const startDate = req.query.start_date || null;
     const endDate = req.query.end_date || null;
     
-    // Login to Monarch Money
-    const token = await login(email, password, mfaSecret);
+    // Use direct token if available, otherwise login with credentials
+    let token;
+    if (directToken) {
+      token = directToken;
+    } else {
+      token = await login(email, password, mfaSecret);
+    }
     
     // Fetch transactions
     const transactionData = await fetchTransactions(token, limit, startDate, endDate);

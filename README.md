@@ -35,7 +35,24 @@ vercel deploy --prod
 
 ### 2. Configure Environment Variables
 
-In your Vercel project settings, add the following environment variables:
+In your Vercel project settings, add environment variables based on your login method:
+
+#### For Google OAuth Users (Recommended for Google login)
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `MONARCH_TOKEN` | Your Monarch session token | Yes |
+
+**How to get your token:**
+1. Go to [app.monarchmoney.com](https://app.monarchmoney.com) and login with Google
+2. Open browser DevTools (F12 or Cmd+Option+I on Mac)
+3. Go to **Application** tab → **Local Storage** → `https://app.monarchmoney.com`
+4. Look for the key `mm_at` - copy its value
+5. Alternatively: Go to **Network** tab, make any request, and find the `Authorization: Token ...` header
+
+> ⚠️ **Note:** This token may expire periodically (typically after a few weeks). You'll need to refresh it when it expires.
+
+#### For Email/Password Users
 
 | Variable | Description | Required |
 |----------|-------------|----------|
@@ -132,7 +149,12 @@ To get your TOTP secret:
 
 ## Troubleshooting
 
-### "Login failed" error
+### "Token expired" or "Unauthorized" error (Google OAuth users)
+- Your session token has expired
+- Get a new token from the browser (see instructions above)
+- Update the `MONARCH_TOKEN` environment variable in Vercel
+
+### "Login failed" error (Email/Password users)
 - Verify your email and password are correct
 - Check if MFA is required and configure `MONARCH_MFA_SECRET`
 
@@ -144,6 +166,7 @@ To get your TOTP secret:
 - Verify the API URL is correct in TRMNL settings
 - Check Vercel function logs for errors
 - Ensure your Monarch account has transactions
+- For Google OAuth: Make sure your token is fresh
 
 ## Project Structure
 

@@ -7,11 +7,12 @@ A TRMNL private plugin that displays recent transactions from your [Monarch Mone
 ## Features
 
 - 💰 Display recent transactions with amounts
-- 🏷️ Category icons for visual identification
 - 🏦 Account name display
+- 🏷️ Category name display
 - ⏳ Pending transaction badges
 - 📅 Relative date formatting (Today, Yesterday, 3d ago, etc.)
 - 📱 Multiple display sizes (full, half, quadrant)
+- 🔐 Supports email/password + MFA or session token authentication
 
 ## Prerequisites
 
@@ -105,7 +106,7 @@ The TRMNL preview will be available at `http://localhost:8080`
 | Setting | Description | Default |
 |---------|-------------|---------|
 | Show Account Name | Display which account each transaction is from | true |
-| Show Category | Display category name and icon | true |
+| Show Category | Display category name | true |
 | Show Date | Display relative date | true |
 | Show Pending Badge | Show badge for pending transactions | true |
 | Show Title Bar | Display the plugin title bar | true |
@@ -121,21 +122,6 @@ The API endpoint supports the following query parameters:
 | `end_date` | Filter transactions to this date (YYYY-MM-DD) | - |
 
 Example: `https://your-app.vercel.app/api/monarch?limit=20`
-
-## Category Icons
-
-Transactions are displayed with emoji icons based on their category:
-
-| Category | Icon |
-|----------|------|
-| Groceries | 🛒 |
-| Restaurants | 🍴 |
-| Gas | ⛽ |
-| Shopping | 🛍️ |
-| Entertainment | 🎬 |
-| Income | 💰 |
-| Transfer | ↔️ |
-| ... and many more | |
 
 ## Multi-Factor Authentication (MFA)
 

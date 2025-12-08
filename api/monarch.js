@@ -26,6 +26,7 @@ const CATEGORY_ICONS = {
   'interest': '🏦',
   'investment': '📈',
   'refund': '↩️',
+  'salary': '💵',
   
   // Food & Drink
   'food & drink': '🍽️',
@@ -34,6 +35,8 @@ const CATEGORY_ICONS = {
   'coffee': '☕',
   'fast food': '🍔',
   'alcohol & bars': '🍺',
+  'delivery': '🛵',
+  'food delivery': '🛵',
   
   // Shopping
   'shopping': '🛍️',
@@ -41,6 +44,8 @@ const CATEGORY_ICONS = {
   'electronics': '📱',
   'home': '🏠',
   'gifts': '🎁',
+  'amazon': '📦',
+  'online shopping': '🛒',
   
   // Transportation
   'transportation': '🚗',
@@ -48,10 +53,17 @@ const CATEGORY_ICONS = {
   'parking': '🅿️',
   'public transit': '🚇',
   'rideshare': '🚕',
+  'taxi': '🚕',
+  'taxi & ride shares': '🚕',
+  'ride shares': '🚕',
+  'uber': '🚕',
+  'lyft': '🚕',
   'auto': '🚙',
+  'car': '🚗',
   
   // Bills & Utilities
   'bills & utilities': '📄',
+  'bills': '📄',
   'utilities': '💡',
   'phone': '📱',
   'internet': '🌐',
@@ -61,11 +73,29 @@ const CATEGORY_ICONS = {
   
   // Entertainment
   'entertainment': '🎬',
+  'entertainment & recreation': '🎬',
+  'recreation': '🎬',
   'streaming': '📺',
   'games': '🎮',
+  'gaming': '🎮',
   'music': '🎵',
   'movies': '🎬',
   'sports': '⚽',
+  'hobbies': '🎨',
+  
+  // Tech & Software
+  'software': '💻',
+  'ai': '🤖',
+  'technology': '💻',
+  'tech': '💻',
+  'saas': '☁️',
+  'cloud': '☁️',
+  
+  // Media & News
+  'media': '📰',
+  'news': '📰',
+  'magazines': '📰',
+  'newspapers': '📰',
   
   // Health
   'health': '❤️',
@@ -73,24 +103,29 @@ const CATEGORY_ICONS = {
   'pharmacy': '💊',
   'fitness': '💪',
   'gym': '🏋️',
+  'healthcare': '🏥',
   
   // Travel
   'travel': '✈️',
   'hotels': '🏨',
   'flights': '✈️',
   'vacation': '🏖️',
+  'lodging': '🏨',
   
   // Personal
   'personal': '👤',
   'education': '📚',
   'pets': '🐾',
   'subscriptions': '📋',
+  'personal care': '💅',
   
   // Financial
   'transfer': '↔️',
   'fees': '💳',
   'taxes': '📊',
   'savings': '🐷',
+  'bank fees': '🏦',
+  'atm': '🏧',
   
   // Default
   'default': '💳',

@@ -4,7 +4,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 8px 0;
+    padding: 6px 0;
     border-bottom: 1px solid #ccc;
   }
   .tx-row:last-child {
@@ -18,32 +18,36 @@
   }
   .tx-merchant {
     font-weight: bold;
-    font-size: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .tx-meta {
-    font-size: 12px;
+    font-size: 13px;
     color: #666;
     margin-top: 2px;
+    margin-left: 30px;
   }
   .tx-amount {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     text-align: right;
     white-space: nowrap;
-    padding-left: 12px;
+    min-width: 90px;
   }
   .tx-pending {
-    font-size: 10px;
-    padding: 2px 6px;
+    font-size: 9px;
+    padding: 2px 5px;
     border: 1px solid #888;
     border-radius: 3px;
-    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   .tx-icon {
-    margin-right: 6px;
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
   }
 </style>
 
@@ -54,10 +58,10 @@
         {% if show_category == true or show_category == 'true' %}
           <span class="tx-icon">{{ category_icon }}</span>
         {% endif %}
-        {{ merchant | truncate: 20 }}
+        <span>{{ merchant | truncate: 22 }}</span>
         {% if pending == true %}
           {% if show_pending == true or show_pending == 'true' %}
-            <span class="tx-pending">PENDING</span>
+            <span class="tx-pending">pending</span>
           {% endif %}
         {% endif %}
       </div>
@@ -83,11 +87,11 @@
 
 {% template transaction_compact %}
   <div class="tx-row">
-    <div class="tx-merchant" style="flex: 1;">
-      <span class="tx-icon">{{ category_icon }}</span>
-      {{ merchant | truncate: 16 }}
+    <div class="tx-merchant" style="flex: 1; display: flex; align-items: center; gap: 6px;">
+      <span class="tx-icon" style="font-size: 16px;">{{ category_icon }}</span>
+      <span>{{ merchant | truncate: 16 }}</span>
     </div>
-    <div class="tx-amount">
+    <div class="tx-amount" style="font-size: 16px;">
       {{ amount_formatted }}
     </div>
   </div>

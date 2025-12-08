@@ -35,8 +35,8 @@ const CATEGORY_ICONS = {
   'coffee': '☕',
   'fast food': '🍔',
   'alcohol & bars': '🍺',
-  'delivery': '🛵',
-  'food delivery': '🛵',
+  'delivery': '🚚',
+  'food delivery': '�',
   
   // Shopping
   'shopping': '🛍️',
@@ -356,9 +356,13 @@ async function fetchTransactions(token, limit = 10, startDate = null, endDate = 
  * Format date for display
  */
 function formatDate(dateString) {
-  const date = new Date(dateString);
+  // Parse date as local date (not UTC) by parsing components
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);  // month is 0-indexed
+  
   const now = new Date();
-  const diffMs = now - date;
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffMs = today - date;
   const diffDays = Math.floor(diffMs / 86400000);
   
   if (diffDays === 0) {

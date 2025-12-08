@@ -121,6 +121,59 @@ function getCategoryIcon(categoryName) {
 }
 
 /**
+ * Generate TOTP code from secret
+ * Simple implementation without external dependencies
+ */
+async function generateTOTP(secret) {
+  // Decode base32 secret
+  const base32chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  const cleanSecret = secret.replace(/\s/g, '').toUpperCase();
+  
+  for (const char of cleanSecret) {
+    const val = base32chars.indexOf(char);
+    if (val === -1) continue;
+    bits += val.toString(2).padStart(5, '0');
+  }
+  
+  const bytes = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) {
+    bytes.push(parseInt(bits.substr(i, 8), 2));
+  }
+  const key = new Uint8Array(bytes);
+  
+  // Get current time step (30 second intervals)
+  const time = Math.floor(Date.now() / 1000 / 30);
+  const timeBuffer = new ArrayBuffer(8);
+  const timeView = new DataView(timeBuffer);
+  timeView.setBigUint64(0, BigInt(time));
+  
+  // Import key for HMAC
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    key,
+    { name: 'HMAC', hash: 'SHA-1' },
+    false,
+    ['sign']
+  );
+  
+  // Generate HMAC
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, timeBuffer);
+  const hmac = new Uint8Array(signature);
+  
+  // Dynamic truncation
+  const offset = hmac[hmac.length - 1] & 0x0f;
+  const code = (
+    ((hmac[offset] & 0x7f) << 24) |
+    ((hmac[offset + 1] & 0xff) << 16) |
+    ((hmac[offset + 2] & 0xff) << 8) |
+    (hmac[offset + 3] & 0xff)
+  ) % 1000000;
+  
+  return code.toString().padStart(6, '0');
+}
+
+/**
  * Login to Monarch Money and get auth token
  */
 async function login(email, password, mfaSecret = null) {
@@ -133,8 +186,11 @@ async function login(email, password, mfaSecret = null) {
 
   // If MFA secret is provided, generate TOTP code
   if (mfaSecret) {
-    // Simple TOTP implementation would go here
-    // For now, we'll handle MFA error and inform user
+    try {
+      loginData.totp = await generateTOTP(mfaSecret);
+    } catch (e) {
+      console.error('Failed to generate TOTP:', e);
+    }
   }
 
   const response = await fetch(`${MONARCH_BASE}/auth/login/`, {

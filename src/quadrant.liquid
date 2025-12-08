@@ -1,0 +1,33 @@
+{% if status == 'error' %}
+  {% render "error_msg", 
+    message: message,
+    url: trmnl.plugin_settings.custom_fields_values.api_url
+  %}
+{% else %}
+  <div class="layout">
+    <div class="columns">
+      <div class="column">
+        <div class="list" 
+          data-list-limit="true" 
+          data-list-max-height="180" 
+          data-list-hidden-count="false"
+          data-list-max-columns="1">        
+          {% for item in items limit:4 %}
+            {% render "transaction_compact", 
+              cssClasses: "",
+              merchant: item.merchant,
+              amount_formatted: item.amount_formatted,
+              is_income: item.is_income,
+              is_expense: item.is_expense,
+              category_icon: item.category_icon
+            %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% unless trmnl.plugin_settings.custom_fields_values.show_title_bar == false or trmnl.plugin_settings.custom_fields_values.show_title_bar == 'false' %}
+  {% render "title_bar", title: '💰', description: '' %}
+{% endunless %}

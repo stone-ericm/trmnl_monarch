@@ -1,0 +1,21 @@
+# TRMNLP configuration for Monarch Money Plugin
+# {{ env.VARIABLE }} interpolation is available here
+---
+# auto-reload when files change (`watch: false` to disable)
+watch:
+  - .trmnlp.yml
+  - src
+
+# values of custom fields (defined in src/settings.yml)
+# For local development, use your deployed Vercel URL or localhost:3000/api/monarch
+custom_fields:
+  api_url: "http://localhost:3000/api/monarch"
+  show_account: true
+  show_category: true
+  show_date: true
+  show_pending: true
+  show_title_bar: true
+
+# override variables (for testing with sample data)
+variables:
+  trmnl: {}

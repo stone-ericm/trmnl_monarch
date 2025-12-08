@@ -1,0 +1,16 @@
+{
+  "name": "trmnl-monarch",
+  "version": "1.0.0",
+  "description": "TRMNL private plugin for Monarch Money - displays recent transactions",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "trmnl": "trmnlp serve"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}

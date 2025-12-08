@@ -1,0 +1,65 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: '{{ api_url }}'
+polling_headers: ''
+polling_body: ''
+custom_fields:
+- keyname: author_bio
+  name: About This Plugin
+  field_type: author_bio
+  description: "v1.0.0 - Monarch Money Transactions for TRMNL. Displays your recent transactions with category icons and amounts."
+  github_url: https://github.com
+  learn_more_url: https://monarchmoney.com
+  email_address: ''
+- keyname: api_url
+  field_type: string
+  name: API URL
+  description: "Your Vercel deployment URL (e.g., https://your-app.vercel.app/api/monarch)"
+  placeholder: https://your-app.vercel.app/api/monarch
+  default: ''
+- keyname: show_account
+  name: Show Account Name
+  description: Display which account each transaction is from
+  field_type: select
+  options:
+  - 'true'
+  - 'false'
+  default: 'true'
+- keyname: show_category
+  name: Show Category
+  description: Display category name and icon for each transaction
+  field_type: select
+  options:
+  - 'true'
+  - 'false'
+  default: 'true'
+- keyname: show_date
+  name: Show Date
+  description: Display relative date for each transaction
+  field_type: select
+  options:
+  - 'true'
+  - 'false'
+  default: 'true'
+- keyname: show_pending
+  name: Show Pending Badge
+  description: Show a badge for pending transactions
+  field_type: select
+  options:
+  - 'true'
+  - 'false'
+  default: 'true'
+- keyname: show_title_bar
+  name: Show Title Bar
+  description: Display the plugin title bar
+  field_type: select
+  options:
+  - 'true'
+  - 'false'
+  default: 'true'
+name: 'Monarch Money'
+refresh_interval: 60

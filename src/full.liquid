@@ -9,7 +9,7 @@
   {% assign show_date = trmnl.plugin_settings.custom_fields_values.show_date %}
   {% assign show_pending = trmnl.plugin_settings.custom_fields_values.show_pending %}
 
-  <div class="layout" style="padding: 16px;">
+  <div class="layout">
     <div class="tx-list">
       {% for item in items limit:10 %}
         {% render "transaction_row", 

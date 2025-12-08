@@ -1,5 +1,8 @@
 <!-- Monarch Money TRMNL Plugin - Shared Components -->
 <style>
+  .tx-list {
+    padding: 0 8px;
+  }
   .tx-row {
     display: flex;
     justify-content: space-between;
@@ -27,7 +30,6 @@
     font-size: 13px;
     color: #666;
     margin-top: 2px;
-    margin-left: 30px;
   }
   .tx-amount {
     font-weight: bold;
@@ -44,21 +46,13 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .tx-icon {
-    font-size: 20px;
-    width: 24px;
-    text-align: center;
-  }
 </style>
 
 {% template transaction_row %}
   <div class="tx-row">
     <div class="tx-left">
       <div class="tx-merchant">
-        {% if show_category == true or show_category == 'true' %}
-          <span class="tx-icon">{{ category_icon }}</span>
-        {% endif %}
-        <span>{{ merchant | truncate: 22 }}</span>
+        <span>{{ merchant | truncate: 28 }}</span>
         {% if pending == true %}
           {% if show_pending == true or show_pending == 'true' %}
             <span class="tx-pending">pending</span>

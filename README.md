@@ -1,183 +1,111 @@
-# TRMNL Monarch Money Plugin
+# TRMNL Monarch Money
 
-A TRMNL private plugin that displays recent transactions from your [Monarch Money](https://monarchmoney.com) account.
+A TRMNL private plugin that displays recent transactions from Monarch Money on an e-ink screen.
 
-![TRMNL](https://usetrmnl.com/images/trmnl-logo.svg)
+## What It Does
 
-## Features
+Fetches your latest transactions from Monarch Money and renders them for TRMNL's e-ink display. Each transaction shows the merchant name, amount, category, account name, and relative date. Pending transactions are marked with a badge. Income and expenses are visually distinguished.
 
-- 💰 Display recent transactions with amounts
-- 🏦 Account name display
-- 🏷️ Category name display
-- ⏳ Pending transaction badges
-- 📅 Relative date formatting (Today, Yesterday, 3d ago, etc.)
-- 📱 Multiple display sizes (full, half, quadrant)
-- 🔐 Supports email/password + MFA or session token authentication
+## Display Layouts
 
-## Prerequisites
+The plugin supports all four TRMNL display sizes:
 
-- A [Monarch Money](https://monarchmoney.com) account
-- A [Vercel](https://vercel.com) account (for hosting the API)
-- A [TRMNL](https://usetrmnl.com) device
-- Node.js 18+ (for local development)
+- **Full** -- Up to 10 transactions with merchant, amount, category, account, date, and pending badge.
+- **Half Horizontal** -- Up to 5 transactions with the same detail as full.
+- **Half Vertical** -- Up to 7 transactions in compact mode (category icon, merchant, amount).
+- **Quadrant** -- Up to 4 transactions in compact mode.
 
-## Quick Start
+All layouts support toggling the title bar on or off via plugin settings.
 
-### 1. Clone and Deploy to Vercel
+## Setup
 
-```bash
-# Clone this repository
-git clone <your-repo-url>
-cd trmnl-monarch
+### 1. Deploy to Vercel
 
-# Deploy to Vercel
-vercel deploy --prod
+Fork or clone this repo, then deploy to Vercel:
+
+```
+npm i -g vercel
+vercel --prod
 ```
 
-### 2. Configure Environment Variables
+Or connect the repo directly in the Vercel dashboard for automatic deploys.
 
-In your Vercel project settings, add environment variables based on your login method:
+### 2. Set Environment Variables
 
-#### For Google OAuth Users (Recommended for Google login)
+In your Vercel project settings, add one of the following authentication configurations (see the Authentication section below):
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `MONARCH_TOKEN` | Your Monarch session token | Yes |
+**Token auth:**
 
-**How to get your token:**
-1. Go to [app.monarchmoney.com](https://app.monarchmoney.com) and login with Google
-2. Open browser DevTools (F12 or Cmd+Option+I on Mac)
-3. Go to **Application** tab → **Local Storage** → `https://app.monarchmoney.com`
-4. Look for the key `mm_at` - copy its value
-5. Alternatively: Go to **Network** tab, make any request, and find the `Authorization: Token ...` header
+| Variable | Description |
+|---|---|
+| `MONARCH_TOKEN` | Session token from your browser |
 
-> ⚠️ **Note:** This token may expire periodically (typically after a few weeks). You'll need to refresh it when it expires.
+**Email/password auth:**
 
-#### For Email/Password Users
+| Variable | Description |
+|---|---|
+| `MONARCH_EMAIL` | Your Monarch Money email |
+| `MONARCH_PASSWORD` | Your Monarch Money password |
+| `MONARCH_MFA_SECRET` | (Optional) TOTP secret for MFA |
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `MONARCH_EMAIL` | Your Monarch Money email | Yes |
-| `MONARCH_PASSWORD` | Your Monarch Money password | Yes |
-| `MONARCH_MFA_SECRET` | TOTP secret for MFA (if enabled) | No |
+### 3. Configure TRMNL
 
-### 3. Set Up TRMNL Private Plugin
+1. In the TRMNL dashboard, create a new Private Plugin.
+2. Set the polling strategy to **Webhook/Polling**.
+3. Set the API URL to your Vercel deployment endpoint: `https://your-app.vercel.app/api/monarch`
+4. Upload the Liquid templates from `src/` for each display size (full, half_horizontal, half_vertical, quadrant), along with `shared.liquid`.
 
-1. Go to your [TRMNL Dashboard](https://usetrmnl.com/dashboard)
-2. Navigate to **Plugins** → **Private Plugins**
-3. Create a new private plugin
-4. Upload the contents of the `src/` folder
-5. Configure the plugin settings:
-   - **API URL**: Your Vercel deployment URL (e.g., `https://your-app.vercel.app/api/monarch`)
-   - Other display preferences as desired
+### 4. Plugin Settings
+
+These options are configurable in the TRMNL plugin settings panel:
+
+| Setting | Default | Description |
+|---|---|---|
+| Show Account Name | true | Display which account each transaction is from |
+| Show Category | true | Display category name/icon |
+| Show Date | true | Display relative date (e.g. "Today", "3d ago") |
+| Show Pending Badge | true | Show a badge on pending transactions |
+| Show Title Bar | true | Display the plugin title bar |
+
+## Authentication
+
+**Method 1 -- Session Token (recommended for Google OAuth users)**
+
+If you log in to Monarch Money with Google, you cannot use email/password auth. Instead:
+
+1. Log in to [monarchmoney.com](https://monarchmoney.com) in your browser.
+2. Open DevTools and find a request to `api.monarchmoney.com`.
+3. Copy the `Authorization` header value (the token after `Token `).
+4. Set `MONARCH_TOKEN` in your Vercel environment variables.
+
+Note: Session tokens expire periodically and will need to be refreshed.
+
+**Method 2 -- Email and Password**
+
+Set `MONARCH_EMAIL` and `MONARCH_PASSWORD`. If your account has MFA enabled, also set `MONARCH_MFA_SECRET` to your TOTP secret (the base32 string you get when setting up an authenticator app). The server generates TOTP codes automatically at request time.
+
+## API Query Parameters
+
+The `/api/monarch` endpoint accepts optional query parameters:
+
+| Parameter | Default | Description |
+|---|---|---|
+| `limit` | 10 | Number of transactions to fetch (max 50) |
+| `start_date` | -- | Filter start date (YYYY-MM-DD) |
+| `end_date` | -- | Filter end date (YYYY-MM-DD) |
 
 ## Local Development
 
-### Install TRMNL CLI
-
-```bash
-npm install -g trmnlp
+```
+npm run trmnl    # Serve templates with trmnlp
+npm run dev      # Run Vercel dev server locally
 ```
 
-### Set Up Environment
+The `.trmnlp.yml` file configures local development defaults for the TRMNL plugin preview tool.
 
-```bash
-# Copy environment template
-cp .env.example .env
+## Tech Stack
 
-# Edit .env with your Monarch credentials
-nano .env
-```
-
-### Run Locally
-
-```bash
-# Start the Vercel dev server (for the API)
-npm run dev
-
-# In a separate terminal, start the TRMNL preview
-npm run trmnl
-```
-
-The TRMNL preview will be available at `http://localhost:8080`
-
-## Configuration Options
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show Account Name | Display which account each transaction is from | true |
-| Show Category | Display category name | true |
-| Show Date | Display relative date | true |
-| Show Pending Badge | Show badge for pending transactions | true |
-| Show Title Bar | Display the plugin title bar | true |
-
-## API Parameters
-
-The API endpoint supports the following query parameters:
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `limit` | Number of transactions to fetch (max 50) | 10 |
-| `start_date` | Filter transactions from this date (YYYY-MM-DD) | - |
-| `end_date` | Filter transactions to this date (YYYY-MM-DD) | - |
-
-Example: `https://your-app.vercel.app/api/monarch?limit=20`
-
-## Multi-Factor Authentication (MFA)
-
-If your Monarch Money account has MFA enabled, you'll need to provide your TOTP secret key in the `MONARCH_MFA_SECRET` environment variable.
-
-To get your TOTP secret:
-1. When setting up your authenticator app, look for the "manual entry" or "secret key" option
-2. Copy this secret key and add it to your environment variables
-
-**Note**: If you've already set up MFA and don't have the secret, you may need to disable and re-enable MFA to obtain it.
-
-## Troubleshooting
-
-### "Token expired" or "Unauthorized" error (Google OAuth users)
-- Your session token has expired
-- Get a new token from the browser (see instructions above)
-- Update the `MONARCH_TOKEN` environment variable in Vercel
-
-### "Login failed" error (Email/Password users)
-- Verify your email and password are correct
-- Check if MFA is required and configure `MONARCH_MFA_SECRET`
-
-### "MFA_REQUIRED" error
-- Your account has MFA enabled
-- Add the `MONARCH_MFA_SECRET` environment variable
-
-### No transactions appearing
-- Verify the API URL is correct in TRMNL settings
-- Check Vercel function logs for errors
-- Ensure your Monarch account has transactions
-- For Google OAuth: Make sure your token is fresh
-
-## Project Structure
-
-```
-trmnl-monarch/
-├── api/
-│   └── monarch.js      # Vercel serverless function
-├── src/
-│   ├── settings.yml    # TRMNL plugin settings
-│   ├── shared.liquid   # Shared components
-│   ├── full.liquid     # Full screen template
-│   ├── half_horizontal.liquid
-│   ├── half_vertical.liquid
-│   └── quadrant.liquid # Smallest display
-├── .env.example        # Environment template
-├── .trmnlp.yml         # Local dev config
-├── package.json
-├── vercel.json
-└── README.md
-```
-
-## License
-
-MIT
-
-## Disclaimer
-
-This plugin is not affiliated with or endorsed by Monarch Money. Use at your own risk. Your credentials are stored securely in Vercel environment variables and are never exposed to TRMNL or third parties.
+- Node.js 18+ (Vercel Serverless Function, zero dependencies)
+- Monarch Money GraphQL API
+- Liquid templates (TRMNL rendering engine)
+- Vercel for deployment

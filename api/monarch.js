@@ -36,7 +36,7 @@ const CATEGORY_ICONS = {
   'fast food': '🍔',
   'alcohol & bars': '🍺',
   'delivery': '🚚',
-  'food delivery': '�',
+  'food delivery': '🛵',
   
   // Shopping
   'shopping': '🛍️',
@@ -397,7 +397,7 @@ function formatAmount(amount) {
  */
 export default async function handler(req, res) {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   

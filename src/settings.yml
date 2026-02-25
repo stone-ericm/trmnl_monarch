@@ -12,7 +12,7 @@ custom_fields:
   name: About This Plugin
   field_type: author_bio
   description: "v1.0.0 - Monarch Money Transactions for TRMNL. Displays your recent transactions with category icons and amounts."
-  github_url: https://github.com
+  github_url: https://github.com/stone-ericm/trmnl_monarch
   learn_more_url: https://monarchmoney.com
   email_address: ''
 - keyname: api_url
